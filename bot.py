@@ -2,15 +2,18 @@ import os
 import sqlite3
 from datetime import datetime, timedelta
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 from random import sample
 from dotenv import load_dotenv
 
 # .env dosyasındaki değişkenleri yükleyin
 load_dotenv()
 
-# Telegram bot tokenını ortam değişkeninden alın
+# Ortam değişkenini okuyun
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+if TOKEN is None:
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable not found")
 
 # Veritabanı bağlantısı
 conn = sqlite3.connect('messages.db')
@@ -56,7 +59,7 @@ def main() -> None:
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, track_messages))
+    dispatcher.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, track_messages))
     dispatcher.add_handler(CommandHandler("draw", draw_lottery))
 
     updater.start_polling()
@@ -64,3 +67,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+

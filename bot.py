@@ -13,7 +13,10 @@ load_dotenv()
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 if TOKEN is None:
-    raise ValueError("TELEGRAM_BOT_TOKEN environment variable not found")
+    print("TELEGRAM_BOT_TOKEN environment variable not found or empty")
+    raise ValueError("TELEGRAM_BOT_TOKEN environment variable not found or empty")
+else:
+    print(f"Loaded TELEGRAM_BOT_TOKEN: {TOKEN}")
 
 # Veritabanı bağlantısı
 conn = sqlite3.connect('messages.db')
